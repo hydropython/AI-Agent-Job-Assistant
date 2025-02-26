@@ -4,8 +4,8 @@ from datetime import datetime
 import time
 
 # Your API credentials
-app_id = "aa0fe70e"
-app_key = "8f263064fae7759f6dabd1303edf8faf"
+app_id = "#####"
+app_key = "####"
 
 # API URL
 url = "https://api.adzuna.com/v1/api/jobs/gb/search/1"

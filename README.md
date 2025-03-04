@@ -10,9 +10,9 @@ The **AI Job Application Automation** project provides a fully automated solutio
 
 ## Features
 
-- **Job Scraping**: Automatically scrapes job listings from popular job boards based on predefined search queries.
-- **Cover Letter Generation**: Creates personalized cover letters based on the job title, company, and job description.
-- **Email Sending**: Sends emails with the generated cover letters to the relevant job applications.
+- **Job Scraping**: Automatically scrapes job listings from adzuna.com based on predefined search queries.
+- **Cover Letter Generation**: Creates personalized cover letters based on the job title, company,job description, and experiance extracted from uploded CV.
+- **Email Sending**: Sends emails with the generated cover letters and uploded CV to the relevant job applications.
 - **Job Tracking Dashboard**: Tracks job application status in a Google Sheets dashboard for easy reference.
 - **Streamlit Dashboard**: Provides a real-time, interactive web dashboard for tracking job application statuses.
 

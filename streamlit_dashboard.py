@@ -70,8 +70,8 @@ def display_dashboard():
     </style>""", unsafe_allow_html=True)
 
     # Create an instance of the JobScraperAPI class
-    app_id = 'aa0fe70e'  # Replace with your app ID
-    api_key = '171f9b5103345cc3b28b31890b9f572f'
+    app_id = '#####'  # Replace with your app ID
+    api_key = '######'
     scraper = JobScraper(app_id, api_key, ["Software Engineer", "Data Scientist"], "NYC")
     
     # Fetch jobs using the scraper

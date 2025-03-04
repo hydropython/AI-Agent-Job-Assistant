@@ -114,8 +114,8 @@ class JobScraper:
         print(f"📊 Number of jobs in the database: {result[0]}")
 
 if __name__ == "__main__":
-    app_id = 'aa0fe70e'  # Replace with your app ID
-    api_key = '171f9b5103345cc3b28b31890b9f572f'
+    app_id = '####'  # Replace with your app ID
+    api_key = '#######'
     job_titles = ["Data Scientist", "Software Engineer", "Machine Learning Engineer", "AI Researcher", "DevOps Engineer"]
     location = "London"
 

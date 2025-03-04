@@ -110,6 +110,7 @@ Once the setup is complete, start the automation process by running:
    ```
 
 This will:
+
 ✅ Scrape job listings  
 ✅ Generate personalized cover letters  
 ✅ Send emails automatically  

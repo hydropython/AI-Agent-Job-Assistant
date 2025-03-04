@@ -10,9 +10,9 @@ The **AI Job Application Automation** project provides a fully automated solutio
 
 ## Features
 
-- **Job Scraping**: Automatically scrapes job listings from popular job boards based on predefined search queries.
-- **Cover Letter Generation**: Creates personalized cover letters based on the job title, company, and job description.
-- **Email Sending**: Sends emails with the generated cover letters to the relevant job applications.
+- **Job Scraping**: Automatically scrapes job listings from adzuna.com based on predefined search queries.
+- **Cover Letter Generation**: Creates personalized cover letters based on the job title, company,job description, and experiance extracted from uploded CV.
+- **Email Sending**: Sends emails with the generated cover letters and uploded CV to the relevant job applications.
 - **Job Tracking Dashboard**: Tracks job application status in a Google Sheets dashboard for easy reference.
 - **Streamlit Dashboard**: Provides a real-time, interactive web dashboard for tracking job application statuses.
 
@@ -23,7 +23,7 @@ The **AI Job Application Automation** project provides a fully automated solutio
 - **NLP (Natural Language Processing)**: Used for processing job data and generating personalized content.
 - **gspread**: For interacting with Google Sheets to track job application statuses.
 - **Streamlit**: A framework to build the interactive dashboard.
-- **smtplib & email**: For sending cover letters via email.
+- **smtplib & email**: For sending cover letters and CV via email.
 - **pandas**: For handling data manipulation and storing job listings.
 
 ## Project Structure
@@ -65,7 +65,7 @@ Ensure you have the following tools installed:
 3. Clone the repository and navigate into the project folder:
 
    ```bash
-   git clone https://github.com/yourusername/AI-Job-Application-Automation.git
+   git clone https://github.com/hydropython/AI-Job-Application-Automation.git
    cd AI-Job-Application-Automation
    ```
 
@@ -110,6 +110,7 @@ Once the setup is complete, start the automation process by running:
    ```
 
 This will:
+
 ✅ Scrape job listings  
 ✅ Generate personalized cover letters  
 ✅ Send emails automatically  

@@ -23,7 +23,7 @@ The **AI Job Application Automation** project provides a fully automated solutio
 - **NLP (Natural Language Processing)**: Used for processing job data and generating personalized content.
 - **gspread**: For interacting with Google Sheets to track job application statuses.
 - **Streamlit**: A framework to build the interactive dashboard.
-- **smtplib & email**: For sending cover letters via email.
+- **smtplib & email**: For sending cover letters and CV via email.
 - **pandas**: For handling data manipulation and storing job listings.
 
 ## Project Structure

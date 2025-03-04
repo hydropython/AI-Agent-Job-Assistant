@@ -22,7 +22,7 @@ def authenticate_gsheet(json_credentials_file):
 def update_job_status_in_sheet(spreadsheet_id, sheet_name, job_data):
     try:
         # Authenticate and get the Google Sheets client
-        client = authenticate_gsheet("credentials.json")
+        client = authenticate_gsheet("./Data/job-followup-e2ca373e066a.json")
         
         # Open the Google Sheet using its ID and get the specified worksheet
         sheet = client.open_by_key(spreadsheet_id).worksheet(sheet_name)
@@ -56,7 +56,7 @@ job_data = {
 }
 
 # Replace with your Google Sheets ID and sheet name
-spreadsheet_id = 'your_spreadsheet_id_here'
-sheet_name = 'Job Applications'
+spreadsheet_id = '106284332103486967563'
+sheet_name = 'job_status'
 
 update_job_status_in_sheet(spreadsheet_id, sheet_name, job_data)

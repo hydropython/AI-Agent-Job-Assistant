@@ -49,20 +49,63 @@ Ensure you have the following tools installed:
 
 ### Step 1: Clone the Repository
 
-Open **VS Code**.
+1. Open **VS Code**.
+2. Open the terminal in VS Code by navigating to **Terminal > New Terminal**.
+3. Clone the repository by running:
 
-Open the terminal in VS Code by navigating to **Terminal > New Terminal**.
-
-Clone the repository by running:
-
-```bash
-git clone https://github.com/yourusername/AI-Job-Application-Automation.git
-cd AI-Job-Application-Automation
+    ````bash
+    git clone https://github.com/yourusername/AI-Job-Application-Automation.git
+    cd AI-Job-Application-Automation
+    ````
 
 ### Step 2: Install Dependencies
 
 Install the required Python libraries by running the following command:
 
-```bash
-pip install -r requirements.txt
+    ````bash
+    pip install -r requirements.txt
+    ````
 
+This will install all the necessary libraries, including BeautifulSoup, gspread, Streamlit, pandas, and others required for the project.
+
+### Step 3: Setup Google Sheets API
+
+1. Go to the [Google Developers Console](https://console.developers.google.com/).
+2. Create a new project and enable the Google Sheets API.
+3. Create service account credentials in JSON format and download the file.
+4. Save the credentials file to the root directory of the project.
+
+### Step 4: Set Up Email Configuration
+
+1. Configure an SMTP email provider (e.g., Gmail).
+2. Update the `email_sender.py` script with your SMTP server details and email credentials.
+
+## Usage
+
+### Running the Automation
+
+Once the setup is complete, you can run the job application automation process by executing the following command:
+
+    ````bash
+    python run.py
+    ````
+
+This will start the automation, scraping job listings, generating cover letters, sending emails, and tracking the job application statuses in Google Sheets.
+
+### Running the Streamlit Dashboard
+
+To view the real-time job application dashboard, run the following command:
+
+    ````bash
+    streamlit run streamlit_dashboard.py
+    ````
+
+This will open a browser window displaying the job application tracking dashboard.
+
+## Contributing
+
+If you'd like to contribute to the project, please fork the repository, create a new branch, and submit a pull request. Make sure to follow the contribution guidelines and provide clear documentation for any changes you make.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.

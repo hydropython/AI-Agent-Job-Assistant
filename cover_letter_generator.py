@@ -1,6 +1,8 @@
+import os
 import PyPDF2
 from docx import Document
 from nlp_processing import extract_skills_from_description
+from datetime import datetime
 
 def generate_cover_letter(job_title, company, job_desc, cv_file):
     # Extract skills from job description
@@ -50,7 +52,7 @@ def extract_experience_from_cv(cv_file):
 
     # If the CV is a DOCX
     elif cv_file.name.lower().endswith('.docx'):
-        doc = docx.Document(cv_file)
+        doc = Document(cv_file)
         text = "\n".join([para.text for para in doc.paragraphs])
         experience = extract_experience_from_text(text)
 
@@ -92,7 +94,7 @@ def extract_name_and_contact_from_cv(cv_file):
 
     # If the CV is a DOCX
     elif cv_file.name.lower().endswith('.docx'):
-        doc = docx.Document(cv_file)
+        doc = Document(cv_file)
         text = "\n".join([para.text for para in doc.paragraphs])
         name, contact_info = extract_name_and_contact_from_text(text)
 
@@ -111,4 +113,53 @@ def extract_name_and_contact_from_text(text):
     contact_info = lines[1] if len(lines) > 1 else "Your Contact Information"
     
     return name, contact_info
+
+
+# Save the CV and Cover Letter to Files
+def save_to_files(cv_file, cover_letter, name):
+    # Define directory to store files
+    output_dir = "generated_documents"
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    # Create the file names based on the user's name
+    cover_letter_filename = f"Cover_letter_{name}.txt"
+    cv_filename = f"CV_{name}.txt"
+    
+    # Save Cover Letter to file
+    with open(os.path.join(output_dir, cover_letter_filename), "w") as f:
+        f.write(cover_letter)
+    
+    # Save CV to file (assuming CV is text extracted from the PDF or DOCX)
+    with open(os.path.join(output_dir, cv_filename), "w") as f:
+        f.write("CV content goes here...")  # You could extract the content from the CV file (e.g., from text)
+
+    print(f"Cover letter saved as {cover_letter_filename}")
+    print(f"CV saved as {cv_filename}")
+
+    return os.path.join(output_dir, cover_letter_filename), os.path.join(output_dir, cv_filename)
+
+
+def main():
+    # Define job details and CV path
+    job_title = "Data Scientist"
+    company = "Tech Company"
+    job_desc = "We are looking for a Data Scientist with strong skills in machine learning and data analysis."
+    cv_path = 'path_to_cv.pdf'  # Replace with actual CV path
+    
+    # Simulating opening the CV file
+    with open(cv_path, "rb") as cv_file:
+        # Generate Cover Letter
+        cover_letter = generate_cover_letter(job_title, company, job_desc, cv_file)
+
+        # Extract name from the CV for filename purposes
+        name, contact_info = extract_name_and_contact_from_cv(cv_file)
+
+        # Save the Cover Letter and CV to files
+        cover_letter_filename, cv_filename = save_to_files(cv_file, cover_letter, name)
+
+        print(f"Cover letter and CV saved successfully.")
+
+if __name__ == "__main__":
+    main()
 

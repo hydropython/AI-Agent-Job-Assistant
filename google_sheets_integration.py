@@ -5,6 +5,10 @@ from google.auth.transport.requests import Request
 from google.oauth2.service_account import Credentials
 import logging
 import traceback
+from dotenv import load_dotenv
+
+# Load environment variables from google_sheets.env
+load_dotenv("google_sheets.env")
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")

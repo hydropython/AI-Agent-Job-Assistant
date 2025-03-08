@@ -3,11 +3,22 @@ import sqlite3
 import time
 import requests
 from datetime import datetime
+import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 class JobScraper:
-    def __init__(self, app_id, app_key, job_titles, location="London", db_name="jobs.db"):
-        self.app_id = app_id
-        self.app_key = app_key
+    def __init__(self, job_titles, location="London", db_name="jobs.db"):
+        # Fetch sensitive data securely from environment variables
+        self.app_id = os.getenv('APP_ID')  # Fetch app_id from the .env file
+        self.api_key = os.getenv('API_KEY')  # Fetch api_key from the .env file
+
+        # Ensure app_id and api_key are not None
+        if not self.app_id or not self.api_key:
+            raise ValueError("API credentials (app_id and api_key) must be set in the .env file.")
+        
         self.job_titles = job_titles
         self.location = location
         self.url = "https://api.adzuna.com/v1/api/jobs/gb/search/1"
@@ -43,7 +54,7 @@ class JobScraper:
         for job_title in self.job_titles:
             params = {
                 "app_id": self.app_id,
-                "app_key": self.app_key,
+                "app_key": self.api_key,
                 "what": job_title,
                 "where": self.location,
                 "results_per_page": 10
@@ -114,12 +125,10 @@ class JobScraper:
         print(f"📊 Number of jobs in the database: {result[0]}")
 
 if __name__ == "__main__":
-    app_id = 'aa0fe70e'  # Replace with your app ID
-    api_key = '171f9b5103345cc3b28b31890b9f572f'
     job_titles = ["Data Scientist", "Software Engineer", "Machine Learning Engineer", "AI Researcher", "DevOps Engineer"]
     location = "London"
 
-    scraper = JobScraper(app_id, api_key, job_titles, location)
+    scraper = JobScraper(job_titles=job_titles, location=location)
     scraper.fetch_jobs()
     
     # Retrieve and save jobs

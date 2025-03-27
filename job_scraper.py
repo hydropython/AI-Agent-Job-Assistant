@@ -74,10 +74,17 @@ class JobScraper:
                         
                         if jobs:
                             for job in jobs:
+                                # Ensure job title and company are not missing
+                                job_title = job.get("title", "Unknown")
+                                company = job.get("company", {}).get("display_name", "Unknown")
+                                
+                                if job_title == "Unknown" or company == "Unknown":
+                                    print(f"⚠️ Missing details for a job: {job}")
+                                
                                 all_jobs.append({
                                     "job_title": job_title,
-                                    "title": job.get("title", "Unknown"),
-                                    "company": job.get("company", {}).get("display_name", "Unknown"),
+                                    "title": job_title,
+                                    "company": company,
                                     "location": job.get("location", {}).get("display_name", "Unknown"),
                                     "created": job.get("created", "Unknown"),
                                     "description": job.get("description", "Unknown"),
@@ -102,13 +109,13 @@ class JobScraper:
                 except requests.exceptions.RequestException as e:
                     print(f"🚨 Request failed for '{job_title}': {e}")
                     time.sleep(2 ** attempt)
-
+        
         if all_jobs:
             self.save_to_db(all_jobs)
             print("✅ Data saved to database.")
         else:
             print("❌ No job data to save.")
-    
+
     def save_to_db(self, jobs):
         """Saves job data to SQLite database."""
         try:

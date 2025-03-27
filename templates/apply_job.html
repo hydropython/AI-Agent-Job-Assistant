@@ -7,24 +7,35 @@
 </head>
 <body>
 
-    <h1>Apply for Job: {{ job_url }}</h1>
+    <h1>Apply for the Job</h1>
+    
+    <p>Job URL: <a href="{{ job_url }}" target="_blank">{{ job_url }}</a></p>
+    
+    <!-- Form for uploading CV and generating cover letter -->
+    <form action="{{ url_for('apply_job') }}" method="POST" enctype="multipart/form-data">
+        <label for="cv">Upload your CV:</label>
+        <input type="file" name="cv" id="cv" accept=".pdf, .docx">
+        <br><br>
 
-    <form method="POST">
-        <label for="cover_letter">Cover Letter:</label><br>
-        <textarea name="cover_letter" id="cover_letter" rows="10" cols="50" required></textarea><br><br>
-        <button type="submit">Submit Application</button>
+        <button type="submit">Generate Cover Letter</button>
     </form>
 
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul>
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    {% endwith %}
+    <br><br>
+    <a href="{{ url_for('index') }}">Back to Job Listings</a>
+
+    {% if cover_letter %}
+    <h3>Your Cover Letter</h3>
+    <p>{{ cover_letter }}</p>
+    
+    <h4>Download Files</h4>
+    <p><a href="{{ url_for('static', filename=cover_letter_filename) }}" download>Download Cover Letter</a></p>
+    <p><a href="{{ url_for('static', filename=cv_filename) }}" download>Download CV</a></p>
+    {% endif %}
 
 </body>
 </html>
+
+
+
+
 

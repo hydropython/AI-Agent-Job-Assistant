@@ -3,24 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload CV and Generate Cover Letter</title>
+    <title>Upload Your CV & Generate Cover Letter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            padding: 30px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-group textarea {
+            height: 150px;
+        }
+        .form-group button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .form-group button:hover {
+            background-color: #218838;
+        }
+        .cover-letter-box {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e9ecef;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Upload your CV and provide job details</h1>
-    <form action="/upload" method="POST" enctype="multipart/form-data">
-        <label for="cv">Upload CV:</label>
-        <input type="file" id="cv" name="cv" required><br><br>
 
-        <label for="job_title">Job Title:</label>
-        <input type="text" id="job_title" name="job_title" required><br><br>
+<div class="container">
+    <h2>Upload Your CV & Generate Cover Letter</h2>
 
-        <label for="company">Company:</label>
-        <input type="text" id="company" name="company" required><br><br>
-
-        <label for="job_desc">Job Description:</label>
-        <textarea id="job_desc" name="job_desc" required></textarea><br><br>
-
-        <input type="submit" value="Generate Cover Letter">
+    <!-- Form to upload CV -->
+    <form method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="cv">Upload your CV:</label>
+            <input type="file" name="cv" id="cv" required>
+        </div>
+        <div class="form-group">
+            <label for="job_title">Job Title:</label>
+            <input type="text" name="job_title" id="job_title" required>
+        </div>
+        <div class="form-group">
+            <label for="company">Company Name:</label>
+            <input type="text" name="company" id="company" required>
+        </div>
+        <div class="form-group">
+            <label for="job_desc">Job Description:</label>
+            <textarea name="job_desc" id="job_desc" required></textarea>
+        </div>
+        <div class="form-group">
+            <button type="submit">Generate Cover Letter</button>
+        </div>
     </form>
+
+    <!-- Display Cover Letter if Generated -->
+    {% if cover_letter %}
+    <div class="cover-letter-box">
+        <h3>Generated Cover Letter:</h3>
+        <pre>{{ cover_letter }}</pre>  <!-- Display the cover letter here -->
+    </div>
+    {% endif %}
+</div>
+
 </body>
 </html>
+

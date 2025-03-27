@@ -9,15 +9,15 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email import encoders
 
-def generate_cover_letter(job_title, company, job_desc, cv_file):
+def generate_cover_letter(job_title, company, job_desc, cv_file_path):
     # Extract skills from job description
     skills = extract_skills_from_description(job_desc)
     
     # Extract relevant experience from CV
-    experience = extract_experience_from_cv(cv_file)
+    experience = extract_experience_from_cv(cv_file_path)
 
     # Extract name and contact info from the CV
-    name, contact_info = extract_name_and_contact_from_cv(cv_file)
+    name, contact_info = extract_name_and_contact_from_cv(cv_file_path)
 
     # Create the cover letter template
     cover_letter = f"""
@@ -40,18 +40,19 @@ def generate_cover_letter(job_title, company, job_desc, cv_file):
     return cover_letter
 
 # Helper functions for extracting information from CV
-def extract_experience_from_cv(cv_file):
+def extract_experience_from_cv(cv_file_path):
     experience = ""
 
-    if cv_file.name.lower().endswith('.pdf'):
-        reader = PyPDF2.PdfReader(cv_file)
-        text = ""
-        for page in reader.pages:
-            text += page.extract_text()
+    if cv_file_path.lower().endswith('.pdf'):
+        with open(cv_file_path, 'rb') as cv_file:
+            reader = PyPDF2.PdfReader(cv_file)
+            text = ""
+            for page in reader.pages:
+                text += page.extract_text()
         experience = extract_experience_from_text(text)
 
-    elif cv_file.name.lower().endswith('.docx'):
-        doc = Document(cv_file)
+    elif cv_file_path.lower().endswith('.docx'):
+        doc = Document(cv_file_path)
         text = "\n".join([para.text for para in doc.paragraphs])
         experience = extract_experience_from_text(text)
 
@@ -69,19 +70,20 @@ def extract_experience_from_text(text):
 
     return experience_section
 
-def extract_name_and_contact_from_cv(cv_file):
+def extract_name_and_contact_from_cv(cv_file_path):
     name = ""
     contact_info = ""
 
-    if cv_file.name.lower().endswith('.pdf'):
-        reader = PyPDF2.PdfReader(cv_file)
-        text = ""
-        for page in reader.pages:
-            text += page.extract_text()
+    if cv_file_path.lower().endswith('.pdf'):
+        with open(cv_file_path, 'rb') as cv_file:
+            reader = PyPDF2.PdfReader(cv_file)
+            text = ""
+            for page in reader.pages:
+                text += page.extract_text()
         name, contact_info = extract_name_and_contact_from_text(text)
 
-    elif cv_file.name.lower().endswith('.docx'):
-        doc = Document(cv_file)
+    elif cv_file_path.lower().endswith('.docx'):
+        doc = Document(cv_file_path)
         text = "\n".join([para.text for para in doc.paragraphs])
         name, contact_info = extract_name_and_contact_from_text(text)
 
@@ -149,27 +151,3 @@ def send_email(subject, body, recipient, cv_path, cover_letter_path):
         print("Email sent successfully!")
     except Exception as e:
         print(f"Error sending email: {e}")
-
-def main():
-    job_title = "Data Scientist"
-    company = "Tech Company"
-    job_desc = "We are looking for a Data Scientist with strong skills in machine learning and data analysis."
-    cv_path = 'path_to_cv.pdf'  # Replace with actual CV path
-    
-    with open(cv_path, "rb") as cv_file:
-        cover_letter = generate_cover_letter(job_title, company, job_desc, cv_file)
-        name, contact_info = extract_name_and_contact_from_cv(cv_file)
-        cover_letter_filename, cv_filename = save_to_files(cv_file, cover_letter, name)
-
-        # Send the email with attachments
-        send_email(
-            subject="Application for Data Scientist",
-            body="Please find my application attached.",
-            recipient="recipient@example.com",  # Change this to the actual recipient
-            cv_path=cover_letter_filename,
-            cover_letter_path=cv_filename
-        )
-
-if __name__ == "__main__":
-    main()
-

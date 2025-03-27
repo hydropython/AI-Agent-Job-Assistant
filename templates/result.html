@@ -4,21 +4,90 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Job Listings</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .apply-btn {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .apply-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
 
     <h1>Job Listings</h1>
-    <ul>
-        {% for job in jobs %}
-            <li>
-                <h2>{{ job.title }}</h2>
-                <p>{{ job.description }}</p>
-                <a href="{{ url_for('apply_job', job_url=job.url) }}">
-                    <button>Apply</button>
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
+
+    {% for job in jobs %}
+        <table>
+            <tr>
+                <th>Field</th>
+                <th>Details</th>
+            </tr>
+            <tr>
+                <td><strong>Job Title</strong></td>
+                <td>{{ job.title }}</td>
+            </tr>
+            <tr>
+                <td><strong>Company</strong></td>
+                <td>{{ job.company }}</td>
+            </tr>
+            <tr>
+                <td><strong>Location</strong></td>
+                <td>{{ job.location }}</td>
+            </tr>
+            <tr>
+                <td><strong>Created</strong></td>
+                <td>{{ job.created_at }}</td>
+            </tr>
+            <tr>
+                <td><strong>Job Description</strong></td>
+                <td>{{ job.description }}</td>
+            </tr>
+            <tr>
+                <td><strong>Salary Min</strong></td>
+                <td>£{{ job.salary_min }}</td>
+            </tr>
+            <tr>
+                <td><strong>Salary Max</strong></td>
+                <td>£{{ job.salary_max }}</td>
+            </tr>
+            <tr>
+                <td><strong>Contract Type</strong></td>
+                <td>{{ job.contract_type }}</td>
+            </tr>
+            <tr>
+                <td><strong>Contract Time</strong></td>
+                <td>{{ job.contract_time }}</td>
+            </tr>
+        </table>
+
+        <!-- Apply button -->
+        <a href="{{ url_for('apply_job', job_url=job.apply_link) }}" class="apply-btn">Apply</a>
+    {% endfor %}
 
 </body>
 </html>
+
+

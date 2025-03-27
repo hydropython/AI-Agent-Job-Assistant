@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 import os
 from werkzeug.utils import secure_filename
 import pandas as pd
-from job_scraper import JobScraper  # Import the JobScraper class from job_scraper.py
+from src.job_scraper import JobScraper  # Import the JobScraper class from job_scraper.py
 from cover_letter_generator import generate_cover_letter  # Import cover letter generator function
 from dotenv import load_dotenv
 

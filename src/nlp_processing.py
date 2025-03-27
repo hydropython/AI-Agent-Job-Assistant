@@ -13,7 +13,7 @@ def extract_skills_from_description(job_desc):
 
 
 # cover_letter_generator.py
-from nlp_processing import extract_skills_from_description
+from src.nlp_processing import extract_skills_from_description
 
 def generate_cover_letter(job_title, company, job_desc):
     skills = extract_skills_from_description(job_desc)

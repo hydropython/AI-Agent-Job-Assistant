@@ -1,7 +1,7 @@
 import os
 import PyPDF2
 from docx import Document
-from nlp_processing import extract_skills_from_description
+from src.nlp_processing import extract_skills_from_description
 from datetime import datetime
 import smtplib
 from email.mime.text import MIMEText

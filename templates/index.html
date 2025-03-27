@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Agent Job Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to AI-Agent Job Assistant</h1>
+        <p>Find your dream job today!</p>
+
+        <!-- Job search form -->
+        <form action="{{ url_for('scrape') }}" method="POST">
+            <label for="job_title">Job Title:</label>
+            <input type="text" id="job_title" name="job_title" required>
+
+            <label for="location">Location:</label>
+            <input type="text" id="location" name="location" required>
+
+            <button type="submit">Find Jobs</button>
+        </form>
+
+        <!-- CV upload form (hidden initially) -->
+        <form action="{{ url_for('upload_cv') }}" method="POST" enctype="multipart/form-data">
+            <h2>Upload Your CV</h2>
+            <label for="cv">Select your CV (PDF, DOCX, TXT):</label>
+            <input type="file" name="cv" accept=".pdf,.docx,.txt" required>
+            <button type="submit">Upload CV</button>
+        </form>
+
+    </div>
+</body>
+</html>
+

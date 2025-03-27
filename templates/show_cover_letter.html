@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cover Letter</title>
+</head>
+<body>
+    <h1>Generated Cover Letter</h1>
+    <textarea rows="10" cols="50">{{ cover_letter }}</textarea><br>
+    <form action="/send_email" method="POST">
+        <input type="hidden" name="cover_letter" value="{{ cover_letter }}">
+        <button type="submit">Send via Email</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Application Dashboard</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header class="my-5 text-center">
+            <h1 class="display-4">Welcome to the Job Application Dashboard</h1>
+            <p class="lead">Submit your job applications easily and track progress</p>
+        </header>
+
+        <div class="text-center">
+            <a href="{{ url_for('apply') }}" class="btn btn-lg btn-primary">Start Application</a>
+        </div>
+
+        <!-- Flash message for success or error -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="alert alert-{{ messages[0][0] }} mt-4">
+                    {{ messages[0][1] }}
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <footer class="mt-5 text-center">
+        <p>&copy; 2025 Job App Tracker</p>
+    </footer>
+</body>
+</html>

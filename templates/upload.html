@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload CV and Generate Cover Letter</title>
+</head>
+<body>
+    <h1>Upload your CV and provide job details</h1>
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <label for="cv">Upload CV:</label>
+        <input type="file" id="cv" name="cv" required><br><br>
+
+        <label for="job_title">Job Title:</label>
+        <input type="text" id="job_title" name="job_title" required><br><br>
+
+        <label for="company">Company:</label>
+        <input type="text" id="company" name="company" required><br><br>
+
+        <label for="job_desc">Job Description:</label>
+        <textarea id="job_desc" name="job_desc" required></textarea><br><br>
+
+        <input type="submit" value="Generate Cover Letter">
+    </form>
+</body>
+</html>

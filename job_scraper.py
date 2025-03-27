@@ -6,9 +6,12 @@ from datetime import datetime
 import os
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
-load_dotenv()
+# Load the .env file
+load_dotenv(dotenv_path=r"D:\10 ACADAMY KIFIYA\AI_AGENT automation job\The-AI-Agent-Job-Assistant-Intelligent-Job-Matching-Application-Automation\app.env")
 
+# Debugging: Check if the environment variables are loaded correctly
+print(f"APP_ID: {os.getenv('APP_ID')}")
+print(f"API_KEY: {os.getenv('API_KEY')}")
 class JobScraper:
     def __init__(self, job_titles, location="London", db_name="jobs.db"):
         # Fetch sensitive data securely from environment variables
@@ -47,7 +50,7 @@ class JobScraper:
         self.conn.execute(query)
         self.conn.commit()
     
-    def fetch_jobs(self):
+    def scrape_jobs(self):
         """Fetches job listings from Adzuna API and stores them in the database."""
         all_jobs = []
         
@@ -129,7 +132,7 @@ if __name__ == "__main__":
     location = "London"
 
     scraper = JobScraper(job_titles=job_titles, location=location)
-    scraper.fetch_jobs()
+    scraper.scrape_jobs()  # Corrected the method call
     
     # Retrieve and save jobs
     saved_jobs = scraper.get_saved_jobs()

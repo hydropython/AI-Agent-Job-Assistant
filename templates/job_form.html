@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply for a Job</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header class="my-5 text-center">
+            <h1 class="display-4">Apply for a Job</h1>
+        </header>
+
+        <form method="POST">
+            <div class="form-group">
+                <label for="job_title">Job Title</label>
+                {{ form.job_title(class="form-control") }}
+            </div>
+            <div class="form-group">
+                <label for="company">Company</label>
+                {{ form.company(class="form-control") }}
+            </div>
+            <div class="form-group">
+                <label for="location">Location</label>
+                {{ form.location(class="form-control") }}
+            </div>
+            <div class="form-group text-center">
+                {{ form.submit(class="btn btn-success") }}
+            </div>
+        </form>
+
+        <div class="text-center">
+            <a href="{{ url_for('home') }}" class="btn btn-link">Back to Dashboard</a>
+        </div>
+    </div>
+
+    <footer class="mt-5 text-center">
+        <p>&copy; 2025 Job App Tracker</p>
+    </footer>
+</body>
+</html>

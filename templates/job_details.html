@@ -1,0 +1,12 @@
+<h2>{{ job['job_title'] }}</h2>
+<p><strong>Company:</strong> {{ job['company'] }}</p>
+<p><strong>Location:</strong> {{ job['location'] }}</p>
+<p><strong>Posted:</strong> {{ days_ago }} days ago</p>
+<p><strong>Description:</strong> {{ job['description'] }}</p>
+<p><strong>Salary:</strong> {{ job['salary_min'] }} - {{ job['salary_max'] }}</p>
+<p><strong>Contract Type:</strong> {{ job['contract_type'] }}</p>
+<p><strong>Contract Time:</strong> {{ job['contract_time'] }}</p>
+
+<form action="{{ url_for('upload_cv') }}" method="get">
+    <button type="submit">Upload CV</button>
+</form>

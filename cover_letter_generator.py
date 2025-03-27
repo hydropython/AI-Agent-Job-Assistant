@@ -3,6 +3,11 @@ import PyPDF2
 from docx import Document
 from nlp_processing import extract_skills_from_description
 from datetime import datetime
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email import encoders
 
 def generate_cover_letter(job_title, company, job_desc, cv_file):
     # Extract skills from job description
@@ -34,15 +39,10 @@ def generate_cover_letter(job_title, company, job_desc, cv_file):
     
     return cover_letter
 
-# Helper functions for extracting information from CV (if necessary)
+# Helper functions for extracting information from CV
 def extract_experience_from_cv(cv_file):
-    """
-    Extracts relevant experience and skills from the uploaded CV.
-    This function works for both PDF and DOCX files.
-    """
     experience = ""
 
-    # If the CV is a PDF
     if cv_file.name.lower().endswith('.pdf'):
         reader = PyPDF2.PdfReader(cv_file)
         text = ""
@@ -50,7 +50,6 @@ def extract_experience_from_cv(cv_file):
             text += page.extract_text()
         experience = extract_experience_from_text(text)
 
-    # If the CV is a DOCX
     elif cv_file.name.lower().endswith('.docx'):
         doc = Document(cv_file)
         text = "\n".join([para.text for para in doc.paragraphs])
@@ -58,12 +57,7 @@ def extract_experience_from_cv(cv_file):
 
     return experience
 
-
 def extract_experience_from_text(text):
-    """
-    Processes the raw text from the CV to extract experience and responsibilities.
-    """
-    # Simple processing to find sections related to experience
     experience_section = ""
     experience_keywords = ['experience', 'work', 'role', 'responsibilities']
 
@@ -75,16 +69,10 @@ def extract_experience_from_text(text):
 
     return experience_section
 
-
 def extract_name_and_contact_from_cv(cv_file):
-    """
-    Extracts name and contact information from the CV (works for both PDF and DOCX files).
-    This assumes the name is at the top and contact information follows.
-    """
     name = ""
     contact_info = ""
 
-    # If the CV is a PDF
     if cv_file.name.lower().endswith('.pdf'):
         reader = PyPDF2.PdfReader(cv_file)
         text = ""
@@ -92,7 +80,6 @@ def extract_name_and_contact_from_cv(cv_file):
             text += page.extract_text()
         name, contact_info = extract_name_and_contact_from_text(text)
 
-    # If the CV is a DOCX
     elif cv_file.name.lower().endswith('.docx'):
         doc = Document(cv_file)
         text = "\n".join([para.text for para in doc.paragraphs])
@@ -100,65 +87,88 @@ def extract_name_and_contact_from_cv(cv_file):
 
     return name, contact_info
 
-
 def extract_name_and_contact_from_text(text):
-    """
-    Processes the raw text from the CV to extract name and contact information.
-    Assumes name is the first line and contact info follows.
-    """
     lines = text.split("\n")
-    
-    # Assuming the first line is the name and second line contains contact information
     name = lines[0] if len(lines) > 0 else "Your Full Name"
     contact_info = lines[1] if len(lines) > 1 else "Your Contact Information"
     
     return name, contact_info
 
-
 # Save the CV and Cover Letter to Files
 def save_to_files(cv_file, cover_letter, name):
-    # Define directory to store files
     output_dir = "generated_documents"
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
 
-    # Create the file names based on the user's name
     cover_letter_filename = f"Cover_letter_{name}.txt"
     cv_filename = f"CV_{name}.txt"
     
-    # Save Cover Letter to file
     with open(os.path.join(output_dir, cover_letter_filename), "w") as f:
         f.write(cover_letter)
     
-    # Save CV to file (assuming CV is text extracted from the PDF or DOCX)
     with open(os.path.join(output_dir, cv_filename), "w") as f:
-        f.write("CV content goes here...")  # You could extract the content from the CV file (e.g., from text)
-
-    print(f"Cover letter saved as {cover_letter_filename}")
-    print(f"CV saved as {cv_filename}")
+        f.write("CV content goes here...")  # This should ideally be CV content extracted from the file
 
     return os.path.join(output_dir, cover_letter_filename), os.path.join(output_dir, cv_filename)
 
+# Function to send email with CV and Cover Letter as attachments
+def send_email(subject, body, recipient, cv_path, cover_letter_path):
+    msg = MIMEMultipart()
+    msg['From'] = 'sender@example.com'
+    msg['To'] = recipient
+    msg['Subject'] = subject
+
+    msg.attach(MIMEText(body, 'plain'))
+
+    try:
+        with open(cv_path, 'rb') as file:
+            part = MIMEBase('application', 'octet-stream')
+            part.set_payload(file.read())
+            encoders.encode_base64(part)
+            part.add_header('Content-Disposition', f'attachment; filename={os.path.basename(cv_path)}')
+            msg.attach(part)
+    except Exception as e:
+        print(f"Error attaching CV: {e}")
+
+    try:
+        with open(cover_letter_path, 'rb') as file:
+            part = MIMEBase('application', 'octet-stream')
+            part.set_payload(file.read())
+            encoders.encode_base64(part)
+            part.add_header('Content-Disposition', f'attachment; filename={os.path.basename(cover_letter_path)}')
+            msg.attach(part)
+    except Exception as e:
+        print(f"Error attaching cover letter: {e}")
+
+    try:
+        server = smtplib.SMTP('smtp.example.com', 587)
+        server.starttls()
+        server.login('your_email@example.com', 'your_password')
+        server.sendmail(msg['From'], recipient, msg.as_string())
+        server.quit()
+        print("Email sent successfully!")
+    except Exception as e:
+        print(f"Error sending email: {e}")
 
 def main():
-    # Define job details and CV path
     job_title = "Data Scientist"
     company = "Tech Company"
     job_desc = "We are looking for a Data Scientist with strong skills in machine learning and data analysis."
     cv_path = 'path_to_cv.pdf'  # Replace with actual CV path
     
-    # Simulating opening the CV file
     with open(cv_path, "rb") as cv_file:
-        # Generate Cover Letter
         cover_letter = generate_cover_letter(job_title, company, job_desc, cv_file)
-
-        # Extract name from the CV for filename purposes
         name, contact_info = extract_name_and_contact_from_cv(cv_file)
-
-        # Save the Cover Letter and CV to files
         cover_letter_filename, cv_filename = save_to_files(cv_file, cover_letter, name)
 
-        print(f"Cover letter and CV saved successfully.")
+        # Send the email with attachments
+        send_email(
+            subject="Application for Data Scientist",
+            body="Please find my application attached.",
+            recipient="recipient@example.com",  # Change this to the actual recipient
+            cv_path=cover_letter_filename,
+            cover_letter_path=cv_filename
+        )
 
 if __name__ == "__main__":
     main()

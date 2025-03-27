@@ -17,6 +17,11 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 
 def send_job_application_email(to_email, job_title, company, applicant_name, cv_path):
     try:
+        # Check if the CV file exists
+        if not os.path.exists(cv_path):
+            logging.error(f"CV file not found at {cv_path}")
+            return
+        
         # Open the CV file and pass the file object
         with open(cv_path, 'rb') as cv_file:
             cover_letter_path = generate_cover_letter(job_title, company, applicant_name, cv_file)
@@ -102,6 +107,7 @@ def send_job_application_email(to_email, job_title, company, applicant_name, cv_
 
     except Exception as e:
         logging.error(f"An error occurred while preparing to send the email: {str(e)}", exc_info=True)
+
 
 # Example usage for sending an application email
 logging.info("Sending email...")

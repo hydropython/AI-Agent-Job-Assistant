@@ -37,7 +37,7 @@ AI-Job-Application-Automation/
 │   ├── nlp_processing.py        # Processes job descriptions and generates personalized content
 │   ├── cover_letter_generator.py# Generates cover letters based on scraped job data
 │   ├── email_sender.py          # Sends emails with cover letters and attachments to job applications
-│   ├── flask_dashboard.py       # Provides a real-time dashboard to track job application statuses using Flask
+│   ├── Google_sheet_integration.py# Provides a real-time dashboard to track job application statuses using Flask
 ├── static/                      # Static files (CSS, JS, images)
 ├── templates/                   # HTML templates for the Flask web app
 ├── uploads/                     # Uploaded files (e.g., resumes, job data)

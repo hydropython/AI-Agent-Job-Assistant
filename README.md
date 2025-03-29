@@ -63,8 +63,8 @@ Ensure you have the following tools installed:
 2. Open the terminal in VS Code by navigating to **Terminal > New Terminal**.
 3. Clone the repository by running:
 
-    ````bash
-    [git clone https://github.com/hydropython/AI-Job-Application-Automation.git]
+    ```bash
+    git clone https://github.com/hydropython/AI-Job-Application-Automation.git
     cd AI-Job-Application-Automation
    ```
 

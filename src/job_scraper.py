@@ -4,10 +4,15 @@ import time
 import requests
 from datetime import datetime
 import os
+import logging
+from crewai import Agent, Task  # NEW: Import for crewAI
+# from crewai_tools import Tool  # NEW: Import Tool from crewai_tools
+# from crewai_tools.tools.base_tool import BaseTool  # MODIFIED: Import BaseTool from crewai_tools.tools
 from dotenv import load_dotenv
+from concurrent.futures import ThreadPoolExecutor  # Added for parallelization
 
 # Load the .env file
-load_dotenv(dotenv_path=r"D:\10 ACADAMY KIFIYA\AI_AGENT automation job\The-AI-Agent-Job-Assistant-Intelligent-Job-Matching-Application-Automation\app.env")
+load_dotenv(dotenv_path=r"app.env")
 
 # Debugging: Check if the environment variables are loaded correctly
 print(f"APP_ID: {os.getenv('APP_ID')}")
@@ -50,71 +55,115 @@ class JobScraper:
         self.conn.execute(query)
         self.conn.commit()
     
-    def scrape_jobs(self):
-        """Fetches job listings from Adzuna API and stores them in the database."""
-        all_jobs = []
+    # def scrape_jobs(self):
+    #     if response.status_code != 200:
+    #         logging.error(f"API failed: {response.text}")
+    #         return []
+    #     """Fetches job listings from Adzuna API and stores them in the database."""
+    #     all_jobs = []
         
-        for job_title in self.job_titles:
-            params = {
-                "app_id": self.app_id,
-                "app_key": self.api_key,
-                "what": job_title,
-                "where": self.location,
-                "results_per_page": 10
-            }
+    #     for job_title in self.job_titles:
+    #         params = {
+    #             "app_id": self.app_id,
+    #             "app_key": self.api_key,
+    #             "what": job_title,
+    #             "where": self.location,
+    #             "results_per_page": 10
+    #         }
             
-            retries = 3
-            for attempt in range(retries):
-                try:
-                    response = requests.get(self.url, params=params)
+    #         retries = 3
+    #         for attempt in range(retries):
+    #             try:
+    #                 response = requests.get(self.url, params=params)
                     
-                    if response.status_code == 200:
-                        data = response.json()
-                        jobs = data.get("results", [])
+    #                 if response.status_code == 200:
+    #                     data = response.json()
+    #                     jobs = data.get("results", [])
                         
-                        if jobs:
-                            for job in jobs:
-                                # Ensure job title and company are not missing
-                                job_title = job.get("title", "Unknown")
-                                company = job.get("company", {}).get("display_name", "Unknown")
+    #                     if jobs:
+    #                         for job in jobs:
+    #                             # Ensure job title and company are not missing
+    #                             job_title = job.get("title", "Unknown")
+    #                             company = job.get("company", {}).get("display_name", "Unknown")
                                 
-                                if job_title == "Unknown" or company == "Unknown":
-                                    print(f"⚠️ Missing details for a job: {job}")
+    #                             if job_title == "Unknown" or company == "Unknown":
+    #                                 print(f"⚠️ Missing details for a job: {job}")
                                 
-                                all_jobs.append({
-                                    "job_title": job_title,
-                                    "title": job_title,
-                                    "company": company,
-                                    "location": job.get("location", {}).get("display_name", "Unknown"),
-                                    "created": job.get("created", "Unknown"),
-                                    "description": job.get("description", "Unknown"),
-                                    "salary_min": job.get("salary_min", None),
-                                    "salary_max": job.get("salary_max", None),
-                                    "contract_type": job.get("contract_type", "Unknown"),
-                                    "contract_time": job.get("contract_time", "Unknown"),
-                                    "apply_link": job.get("redirect_url", "Unknown")
-                                })
-                            print(f"✅ Data for '{job_title}' added.")
-                        else:
-                            print(f"❌ No job data returned for '{job_title}'.")
-                        break  # Exit retry loop if successful
-                    else:
-                        print(f"⚠️ Error fetching data for '{job_title}': {response.status_code}")
-                        print(f"Response: {response.text}")  # Debugging line
-                        if attempt < retries - 1:
-                            time.sleep(2 ** attempt)  # Exponential backoff
-                        else:
-                            print("❌ Failed after multiple attempts.")
+    #                             all_jobs.append({
+    #                                 "job_title": job_title,
+    #                                 "title": job_title,
+    #                                 "company": company,
+    #                                 "location": job.get("location", {}).get("display_name", "Unknown"),
+    #                                 "created": job.get("created", "Unknown"),
+    #                                 "description": job.get("description", "Unknown"),
+    #                                 "salary_min": job.get("salary_min", None),
+    #                                 "salary_max": job.get("salary_max", None),
+    #                                 "contract_type": job.get("contract_type", "Unknown"),
+    #                                 "contract_time": job.get("contract_time", "Unknown"),
+    #                                 "apply_link": job.get("redirect_url", "Unknown")
+    #                             })
+    #                         print(f"✅ Data for '{job_title}' added.")
+    #                     else:
+    #                         print(f"❌ No job data returned for '{job_title}'.")
+    #                     break  # Exit retry loop if successful
+    #                 else:
+    #                     print(f"⚠️ Error fetching data for '{job_title}': {response.status_code}")
+    #                     print(f"Response: {response.text}")  # Debugging line
+    #                     if attempt < retries - 1:
+    #                         time.sleep(2 ** attempt)  # Exponential backoff
+    #                     else:
+    #                         print("❌ Failed after multiple attempts.")
                 
-                except requests.exceptions.RequestException as e:
-                    print(f"🚨 Request failed for '{job_title}': {e}")
-                    time.sleep(2 ** attempt)
+    #             except requests.exceptions.RequestException as e:
+    #                 print(f"🚨 Request failed for '{job_title}': {e}")
+    #                 time.sleep(2 ** attempt)
         
+    #     if all_jobs:
+    #         self.save_to_db(all_jobs)
+    #         print("✅ Data saved to database.")
+    #     else:
+    #         print("❌ No job data to save.")
+    #     return all_jobs  # NEW: Return jobs for agent use
+    def scrape_jobs(self):
+        """Scrape jobs from Adzuna API in parallel."""
+        all_jobs = []
+
+        def fetch_jobs(title):
+            """Helper to fetch jobs for a single title."""
+            params = {"app_id": self.app_id, "app_key": self.api_key, "what": title, "where": self.location, "results_per_page": 5}
+            try:
+                response = requests.get(self.url, params=params, timeout=10)
+                if response.status_code == 200:
+                    return response.json().get("results", [])
+                print(f"Error fetching '{title}': {response.status_code}")
+                return []
+            except Exception as e:
+                print(f"Request failed for '{title}': {e}")
+                return []
+
+        # Parallelize API calls
+        with ThreadPoolExecutor(max_workers=5) as executor:
+            job_lists = executor.map(fetch_jobs, self.job_titles)
+            for jobs in job_lists:
+                for job in jobs:
+                    all_jobs.append({
+                        "job_title": job.get("title", "Unknown"),
+                        "title": job.get("title", "Unknown"),
+                        "company": job.get("company", {}).get("display_name", "Unknown"),
+                        "location": job.get("location", {}).get("display_name", "Unknown"),
+                        "created": job.get("created", "Unknown"),
+                        "description": job.get("description", "Unknown"),
+                        "salary_min": job.get("salary_min", None),
+                        "salary_max": job.get("salary_max", None),
+                        "contract_type": job.get("contract_type", "Unknown"),
+                        "contract_time": job.get("contract_time", "Unknown"),
+                        "apply_link": job.get("redirect_url", "Unknown")
+                    })
+
         if all_jobs:
             self.save_to_db(all_jobs)
             print("✅ Data saved to database.")
-        else:
-            print("❌ No job data to save.")
+        return all_jobs
 
     def save_to_db(self, jobs):
         """Saves job data to SQLite database."""
@@ -133,6 +182,27 @@ class JobScraper:
         query = "SELECT COUNT(*) FROM jobs"
         result = self.conn.execute(query).fetchone()
         print(f"📊 Number of jobs in the database: {result[0]}")
+        
+# NEW: Define scrape function for agent
+def scrape_jobs_agent(job_titles, location="London"):
+    scraper = JobScraper(job_titles=job_titles, location=location)
+    return scraper.scrape_jobs()
+# MODIFIED: Define the agent without tools
+scraper_agent = Agent(
+    role="Job Scraper",
+    goal="Scrape job listings from Adzuna API",
+    backstory="Efficient at gathering job data",
+    verbose=False,  # Reduced verbosity
+    # tools=[scrape_jobs_agent]
+)
+
+# MODIFIED: Update the task to directly call JobScraper
+scrape_task = Task(
+    description="Scrape job listings for Data Scientist in London",
+    agent=scraper_agent,
+    expected_output="List of job dictionaries",
+    callback=lambda: JobScraper(job_titles=["Data Scientist"], location="London").scrape_jobs()
+)
 
 if __name__ == "__main__":
     job_titles = ["Data Scientist", "Software Engineer", "Machine Learning Engineer", "AI Researcher", "DevOps Engineer"]

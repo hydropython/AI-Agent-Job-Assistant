@@ -5,6 +5,7 @@ from google.auth.transport.requests import Request
 from google.oauth2.service_account import Credentials
 import logging
 import traceback
+from crewai import Agent  # NEW: Import for crewAI
 from dotenv import load_dotenv
 
 # Load environment variables from google_sheets.env
@@ -96,11 +97,25 @@ def get_job_status_from_sheet(json_credentials_file, spreadsheet_id, sheet_name=
 
     return None
 
+# NEW: Define Tracker Agent tool
+def track_job_agent(job_data):
+    json_credentials_file = os.getenv("GSHEET_CREDENTIALS", "./Data/steam-bonbon-451912-d7-24cde95bb4e7.json")
+    spreadsheet_id = ''
+    return update_job_status_in_sheet(json_credentials_file, spreadsheet_id, "Sheet1", job_data)
+
+# NEW: Define Tracker Agent
+tracker_agent = Agent(
+    role="Status Tracker",
+    goal="Log job applications in Google Sheets",
+    backstory="Organized data manager",
+    verbose=True,
+    tools=[track_job_agent]
+)
 # Example usage
 if __name__ == "__main__":
     # Set the credentials file and Google Sheet ID
-    json_credentials_file = os.getenv("GSHEET_CREDENTIALS", "./Data/job-followup-453107-87c919c701d5.json")
-    spreadsheet_id = '1ZEN165MiQskSKxP1S0IhZkDeFmL0BmCealM434ufiZU'  # Correct spreadsheet ID
+    json_credentials_file = os.getenv("GSHEET_CREDENTIALS", "./Data/steam-bonbon-451912-d7-24cde95bb4e7.json")
+    spreadsheet_id = ''  # Correct spreadsheet ID
     sheet_name = 'Sheet1'  # Update this if the sheet name is different (check your sheet's actual name)
 
     # Sample job application data

@@ -1,10 +1,14 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import os
+
+os.environ["HF_HUB_DISABLE_SYMLINKS_WARNING"] = "1"
 from werkzeug.utils import secure_filename
 import pandas as pd
 from src.job_scraper import JobScraper  # Import the JobScraper class from job_scraper.py
-from cover_letter_generator import generate_cover_letter  # Import cover letter generator function
+from src.cover_letter_generator import generate_cover_letter  # Import cover letter generator function
 from dotenv import load_dotenv
+from src.orchestrator import run_automation  # NEW: Import orchestrator
+from email_sender import send_job_application_email  # NEW: Import
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -33,7 +37,20 @@ def allowed_file(filename):
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    # NEW: Run automation on homepage load and display results
+    jobs = []
+    agent_status = "Idle"
+    try:
+        result = run_automation()  # NEW: Call orchestrator
+        if isinstance(result, list):  # Assuming orchestrator returns a list of jobs
+            jobs = result
+            agent_status = "Scraper: Done, Writer: Done, Tracker: Done"  # NEW: Static status for now
+        else:
+            flash('No jobs found or automation failed.', 'error')
+    except Exception as e:
+        flash(f'Error running automation: {e}', 'error')
+    return render_template('index.html', jobs=jobs, agent_status=agent_status)  # NEW: Pass jobs and status
+    # return render_template('index.html')
 
 @app.route('/scrape', methods=['POST'])
 def scrape():
@@ -47,30 +64,50 @@ def scrape():
     saved_jobs = scraper.get_saved_jobs()
     
     if isinstance(saved_jobs, pd.DataFrame) and not saved_jobs.empty:
-        return render_template('result.html', jobs=saved_jobs.to_dict(orient="records"))
+        # NEW: Convert DataFrame to list of dicts for template
+        jobs = saved_jobs.to_dict(orient="records")
+        agent_status = "Scraper: Done"  # NEW: Simple status for scrape route
+        # return render_template('result.html', jobs=saved_jobs.to_dict(orient="records"))
+        return render_template('result.html', jobs=jobs, agent_status=agent_status)  # NEW: Pass status
     else:
         return render_template('no_jobs_found.html')
 
-@app.route('/apply_job', methods=['GET', 'POST'])
-def apply_job():
-    job_url = request.args.get('job_url')  # Get job URL from query parameters
+# @app.route('/apply_job', methods=['GET', 'POST'])
+# def apply_job():
+#     job_url = request.args.get('job_url')  # Get job URL from query parameters
     
-    if request.method == 'POST':
-        cover_letter = request.form.get('cover_letter')
-        if cover_letter:
-            # Generate cover letter using the uploaded CV and the passed job info
-            job_title = request.form['job_title']
-            company = request.form['company']
-            job_desc = request.form['job_desc']
-            cover_letter_text = generate_cover_letter(job_title, company, job_desc, None)  # CV path can be handled separately
+#     if request.method == 'POST':
+#         cover_letter = request.form.get('cover_letter')
+#         if cover_letter:
+#             # Generate cover letter using the uploaded CV and the passed job info
+#             job_title = request.form['job_title']
+#             company = request.form['company']
+#             job_desc = request.form['job_desc']
+#             cover_letter_text = generate_cover_letter(job_title, company, job_desc, None)  # CV path can be handled separately
+     
+#             # Generate cover letter (optional: use user-provided cover letter)
+#             cv_path = "uploads/Tihetna_Mesfin  - CV.pdf"  # Replace with actual CV path from upload
+#             applicant_name = "Your Name"  # Replace with extracted name
+#             cover_letter_text = generate_cover_letter(job_title, company, job_desc, cv_path)
+#             if cover_letter:
+#                 cover_letter_text = cover_letter
+            
+#             # Send email
+#             send_job_application_email(
+#                 to_email=["recruiter1@example.com", "recruiter2@example.com"],  # Multiple recipients
+#                 job_title=job_title,
+#                 company=company,
+#                 applicant_name=applicant_name,
+#                 cv_path=cv_path
+#             )
+            
+#             # Save or email the cover letter here if needed
+#             flash('Cover letter submitted successfully!', 'success')
+#             return redirect(url_for('index'))
+#         else:
+#             flash('Please write a cover letter before submitting.', 'error')
 
-            # Save or email the cover letter here if needed
-            flash('Cover letter submitted successfully!', 'success')
-            return redirect(url_for('index'))
-        else:
-            flash('Please write a cover letter before submitting.', 'error')
-
-    return render_template('upload.html', job_url=job_url)  # Pass job URL to the template
+#     return render_template('upload.html', job_url=job_url)  # Pass job URL to the template
 
 @app.route('/upload_cv', methods=['GET', 'POST'])
 def upload_cv():

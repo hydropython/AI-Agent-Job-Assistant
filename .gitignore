@@ -1,5 +1,9 @@
+venv
 env/
 Data/*
 google_sheets.env
 email.env
 app.env
+uploads/
+
+*.env

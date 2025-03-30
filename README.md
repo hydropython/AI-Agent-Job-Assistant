@@ -82,12 +82,18 @@ This will install all necessary libraries, including **BeautifulSoup, gspread, S
 
 ---
 
-## Step 3: Set Up Google Sheets API
+## Step 3: Set Up Google API
 
 1. Go to the **Google Developers Console**.
-2. Create a **new project** and enable the **Google Sheets API**.
-3. Generate **service account credentials** in JSON format and download the file.
-4. Save the credentials file in the **root directory** of the project.
+2. Create a project in **Google Cloud Console**
+
+3. Enable **Google Sheets API** and **Google Drive API**
+
+4. Configure **OAuth consent screen (set to "Testing" mode)**
+
+5. Create **OAuth 2.0 credentials (Desktop App type)**
+
+6. Download as **client_secret.json in /auth folder**
 
 ---
 
@@ -105,7 +111,7 @@ This will install all necessary libraries, including **BeautifulSoup, gspread, S
 Once the setup is complete, start the automation process by running:
 
    ```bash
-   python app.py
+   streamlit run dashboard.py
    ```
 
 This will:
@@ -116,10 +122,28 @@ This will:
 ✅ Track job application statuses in **Google Sheets**  
 
 ---
+## **Workflow**
+✅ *Search Jobs: Define your target roles/locations
+
+✅ Generate Materials: Upload CV to create cover letters
+
+Apply: Send applications directly from the dashboard
+
+✅Track: Monitor all applications in real-time
+---
+## **Security Notes**
+All Google integrations use OAuth 2.0
+
+Email credentials are never stored in plaintext
+
+User data remains private (no cloud storage)
 
 ## License
 
 This project is licensed under the MIT License. See the `LICENSE` file for details.
+
+## **Support**
+For issues or questions, please open an issue.
 
 ## Citations
 The detail report https://app.readytensor.ai/publications/create/a0TkAcBrpkX1/documentation

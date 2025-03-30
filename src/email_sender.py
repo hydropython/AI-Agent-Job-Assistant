@@ -7,10 +7,15 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 from dotenv import load_dotenv
-from cover_letter_generator import generate_cover_letter, save_to_files  # Import the cover letter generator
+from src.cover_letter_generator import generate_cover_letter  # Import the cover letter generator
 
 # Load environment variables from .env file
-load_dotenv('email.env')
+# load_dotenv('email.env')
+
+
+# Load the .env file
+load_dotenv(dotenv_path=r"C:\Users\dell\OneDrive\Desktop\new_AI_job\AI-Agent-Job-Assistant\env\email.env")
+
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -22,19 +27,9 @@ def send_job_application_email(to_email, job_title, company, applicant_name, cv_
             logging.error(f"CV file not found at {cv_path}")
             return
         
-        # # Open the CV file and pass the file object
-        # with open(cv_path, 'rb') as cv_file:
-        #     cover_letter_path = generate_cover_letter(job_title, company, applicant_name, cv_file)
-        
-        # MODIFIED: Fixed cover letter generation to match cover_letter_generator.py signature
-        # Original: with open(cv_path, 'rb') as cv_file:
-        #           cover_letter_path = generate_cover_letter(job_title, company, applicant_name, cv_file)
-        # Issue: generate_cover_letter expects (job_title, company, job_desc, cv_file_path), not a file object
-        # Also, it returns a string, not a path
-        job_desc = "Looking for a skilled professional with relevant experience."  # NEW: Added placeholder job description
-        cover_letter_text = generate_cover_letter(job_title, company, job_desc, cv_path)
-        # NEW: Save the cover letter to a file using save_to_files from cover_letter_generator.py
-        cover_letter_path, _ = save_to_files(cv_path, cover_letter_text, applicant_name)
+        # Open the CV file and pass the file object
+        with open(cv_path, 'rb') as cv_file:
+            cover_letter_path = generate_cover_letter(job_title, company, applicant_name, cv_file)
 
         # Get email credentials from environment variables
         email_user = os.getenv('EMAIL_USER')
@@ -122,12 +117,10 @@ def send_job_application_email(to_email, job_title, company, applicant_name, cv_
 # Example usage for sending an application email
 logging.info("Sending email...")
 send_job_application_email(
-    to_email=["youremail@example.com"],  # MODIFIED: Updated to test multiple emails
-    # to_email="recipient@example.com",
+    to_email=os.getenv('EMAIL_USER'),
     job_title="Data Scientist",
     company="TechCorp",
     applicant_name="John Doe",  # Name of the applicant
-    # cv_path="path_to_uploaded_cv.pdf"  # Path to uploaded CV
-    cv_path="uploads/sample_CV.pdf"  # MODIFIED: Updated to a more realistic path
+    cv_path="path_to_uploaded_cv.pdf"  # Path to uploaded CV
 )
 logging.info("Email function executed.")

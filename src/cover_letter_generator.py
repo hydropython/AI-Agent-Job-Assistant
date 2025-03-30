@@ -8,6 +8,10 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email import encoders
+from dotenv import load_dotenv
+
+# Load the .env file
+load_dotenv(dotenv_path=r"C:\Users\dell\OneDrive\Desktop\new_AI_job\AI-Agent-Job-Assistant\env\email.env")
 
 def generate_cover_letter(job_title, company, job_desc, cv_file_path):
     # Extract skills from job description
@@ -116,7 +120,7 @@ def save_to_files(cv_file, cover_letter, name):
 # Function to send email with CV and Cover Letter as attachments
 def send_email(subject, body, recipient, cv_path, cover_letter_path):
     msg = MIMEMultipart()
-    msg['From'] = 'sender@example.com'
+    msg['From'] = os.getenv('EMAIL_USER')
     msg['To'] = recipient
     msg['Subject'] = subject
 
@@ -143,9 +147,9 @@ def send_email(subject, body, recipient, cv_path, cover_letter_path):
         print(f"Error attaching cover letter: {e}")
 
     try:
-        server = smtplib.SMTP('smtp.example.com', 587)
+        server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
-        server.login('your_email@example.com', 'your_password')
+        server.login(os.getenv('EMAIL_USER'), os.getenv('EMAIL_PASSWORD'))
         server.sendmail(msg['From'], recipient, msg.as_string())
         server.quit()
         print("Email sent successfully!")

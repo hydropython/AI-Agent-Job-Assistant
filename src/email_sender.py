@@ -7,10 +7,15 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 from dotenv import load_dotenv
-from cover_letter_generator import generate_cover_letter  # Import the cover letter generator
+from src.cover_letter_generator import generate_cover_letter  # Import the cover letter generator
 
 # Load environment variables from .env file
-load_dotenv('email.env')
+# load_dotenv('email.env')
+
+
+# Load the .env file
+load_dotenv(dotenv_path=r"C:\Users\dell\OneDrive\Desktop\new_AI_job\AI-Agent-Job-Assistant\env\email.env")
+
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -112,7 +117,7 @@ def send_job_application_email(to_email, job_title, company, applicant_name, cv_
 # Example usage for sending an application email
 logging.info("Sending email...")
 send_job_application_email(
-    to_email="recipient@example.com",
+    to_email=os.getenv('EMAIL_USER'),
     job_title="Data Scientist",
     company="TechCorp",
     applicant_name="John Doe",  # Name of the applicant

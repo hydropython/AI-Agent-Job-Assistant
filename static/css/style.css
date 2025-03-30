@@ -67,6 +67,17 @@ table td a {
     text-decoration: none;
 }
 
+
 table td a:hover {
     text-decoration: underline;
+}
+/* NEW: Styles for flash messages */
+.success {
+    color: #27ae60;
+    font-weight: bold;
+}
+
+.error {
+    color: #e74c3c;
+    font-weight: bold;
 }

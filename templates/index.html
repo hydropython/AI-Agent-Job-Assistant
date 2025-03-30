@@ -27,10 +27,48 @@
             <h2>Upload Your CV</h2>
             <label for="cv">Select your CV (PDF, DOCX, TXT):</label>
             <input type="file" name="cv" accept=".pdf,.docx,.txt" required>
+            <!-- NEW: Hidden fields for job details -->
+            <input type="hidden" name="job_title" value="Sample Job">
+            <input type="hidden" name="company" value="Sample Company">
+            <input type="hidden" name="job_desc" value="Sample description">
             <button type="submit">Upload CV</button>
         </form>
+        <!-- NEW: Display jobs table if jobs exist -->
+        {% if jobs %}
+        <h2>Latest Jobs</h2>
+        <table>
+            <tr>
+                <th>Job Title</th>
+                <th>Company</th>
+                <th>Location</th>
+                <th>Apply</th>
+            </tr>
+            {% for job in jobs %}
+            <tr>
+                <td>{{ job.job_title }}</td>
+                <td>{{ job.company }}</td>
+                <td>{{ job.location }}</td>
+                <td><a href="{{ url_for('apply_job', job_url=job.apply_link) }}">Apply</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% endif %}
+
+        <!-- NEW: Display agent status -->
+        <p>Agent Status: {{ agent_status }}</p>
+
+        <!-- NEW: Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <p class="{{ category }}">{{ message }}</p>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
 
     </div>
+
 </body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9276433d5de0673f',t:'MTc0MzE1NTgzOS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
 

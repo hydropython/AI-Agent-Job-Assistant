@@ -7,7 +7,7 @@ import os
 from dotenv import load_dotenv
 
 # Load the .env file
-load_dotenv(dotenv_path=r"D:\10 ACADAMY KIFIYA\AI_AGENT automation job\The-AI-Agent-Job-Assistant-Intelligent-Job-Matching-Application-Automation\app.env")
+load_dotenv(dotenv_path=r"C:\Users\dell\OneDrive\Desktop\new_AI_job\AI-Agent-Job-Assistant\env\app.env")
 
 # Debugging: Check if the environment variables are loaded correctly
 print(f"APP_ID: {os.getenv('APP_ID')}")

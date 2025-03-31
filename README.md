@@ -146,4 +146,4 @@ This project is licensed under the MIT License. See the `LICENSE` file for detai
 For issues or questions, please open an issue.
 
 ## Citations
-The detail report https://app.readytensor.ai/publications/create/a0TkAcBrpkX1/documentation
+The detail report [https://app.readytensor.ai/publications/create/a0TkAcBrpkX1/documentation](https://app.readytensor.ai/publications/the-ai-agent-job-assistant-application-automation-a0TkAcBrpkX1)

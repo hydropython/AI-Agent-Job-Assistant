@@ -13,12 +13,12 @@ The **AI Job Application Automation** project provides a fully automated solutio
 - **Cover Letter Generation**: Creates personalized cover letters based on the job title, company, job description, and experience extracted from uploaded CVs.
 - **Email Sending**: Sends emails with the generated cover letters and uploaded CVs to the relevant job applications.
 - **Job Tracking Dashboard**: Tracks job application status in a Google Sheets dashboard for easy reference.
-- **Flask Dashboard**: Provides a real-time, interactive web dashboard for tracking job application statuses.
+- **Streamlit Dashboard**: Provides a real-time, interactive web dashboard for tracking job application statuses.
 
 ## Technologies Used
 
 - **Python 3.x**: The primary programming language for the automation logic.
-- **Flask**: A micro web framework used to build the web dashboard.
+- **Streamlit**: A micro web framework used to build the web dashboard.
 
 For more details on the required libraries, refer to the `requirements.txt` file.
 
